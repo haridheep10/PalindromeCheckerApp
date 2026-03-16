@@ -1,32 +1,43 @@
 import java.util.Scanner;
 
+class PalindromeChecker {
+
+    // Method to check palindrome
+    public boolean checkPalindrome(String str) {
+
+        str = str.toLowerCase();
+
+        int start = 0;
+        int end = str.length() - 1;
+
+        while (start < end) {
+            if (str.charAt(start) != str.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+
+        return true;
+    }
+}
+
 public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
+        System.out.print("Enter a word: ");
         String input = sc.nextLine();
 
+        PalindromeChecker checker = new PalindromeChecker();
 
-        String normalized = input.replaceAll("\\s+", "").toLowerCase();
-
-        int start = 0;
-        int end = normalized.length() - 1;
-        boolean isPalindrome = true;
-
-
-        while (start < end) {
-            if (normalized.charAt(start) != normalized.charAt(end)) {
-                isPalindrome = false;
-                break;
-            }
-            start++;
-            end--;
+        if (checker.checkPalindrome(input)) {
+            System.out.println("It is a Palindrome");
+        } else {
+            System.out.println("It is Not a Palindrome");
         }
-
-        System.out.println("Input : " + input);
-        System.out.println("IsPalindrome : " + isPalindrome);
 
         sc.close();
     }
