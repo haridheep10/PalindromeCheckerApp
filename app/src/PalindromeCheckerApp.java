@@ -1,42 +1,99 @@
-import java.util.Scanner;
+import java.util.*;
 
-class PalindromeChecker {
+// Strategy Interface
+interface PalindromeStrategy {
+    boolean checkPalindrome(String str);
+}
 
-    // Method to check palindrome
+// Stack Strategy
+class StackStrategy implements PalindromeStrategy {
+
     public boolean checkPalindrome(String str) {
 
-        str = str.toLowerCase();
+        Stack<Character> stack = new Stack<>();
 
-        int start = 0;
-        int end = str.length() - 1;
+        for (char c : str.toCharArray()) {
+            stack.push(c);
+        }
 
-        while (start < end) {
-            if (str.charAt(start) != str.charAt(end)) {
+        for (char c : str.toCharArray()) {
+            if (c != stack.pop()) {
                 return false;
             }
-            start++;
-            end--;
         }
 
         return true;
     }
 }
 
+// Deque Strategy
+class DequeStrategy implements PalindromeStrategy {
+
+    public boolean checkPalindrome(String str) {
+
+        Deque<Character> deque = new ArrayDeque<>();
+
+        for (char c : str.toCharArray()) {
+            deque.addLast(c);
+        }
+
+        while (deque.size() > 1) {
+
+            if (deque.removeFirst() != deque.removeLast()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+// Context Class
+class PalindromeContext {
+
+    private PalindromeStrategy strategy;
+
+    public PalindromeContext(PalindromeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public boolean executeStrategy(String str) {
+        return strategy.checkPalindrome(str);
+    }
+}
+
+// Main Class
 public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
+        System.out.println("Palindrome Checker using Strategy Pattern");
+        System.out.println("1. Stack Strategy");
+        System.out.println("2. Deque Strategy");
+
+        System.out.print("Choose strategy: ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+
         System.out.print("Enter a word: ");
         String input = sc.nextLine();
 
-        PalindromeChecker checker = new PalindromeChecker();
+        PalindromeStrategy strategy;
 
-        if (checker.checkPalindrome(input)) {
-            System.out.println("It is a Palindrome");
+        if (choice == 1) {
+            strategy = new StackStrategy();
         } else {
-            System.out.println("It is Not a Palindrome");
+            strategy = new DequeStrategy();
+        }
+
+        PalindromeContext context = new PalindromeContext(strategy);
+
+        if (context.executeStrategy(input)) {
+            System.out.println(input + " is a Palindrome");
+        } else {
+            System.out.println(input + " is Not a Palindrome");
         }
 
         sc.close();
